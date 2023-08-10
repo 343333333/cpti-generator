@@ -1,7 +1,7 @@
 import os
 import logging
-NAME="qgen"
-SHORT_CMD="qgen"
+NAME="cpti"
+SHORT_CMD="cpti"
 dlog = logging.getLogger(__name__)
 dlog.setLevel(logging.INFO)
 dlogf = logging.FileHandler(os.getcwd()+os.sep+SHORT_CMD+'.log', delay=True)
@@ -18,7 +18,7 @@ def info():
 	"""
 		Show basic information about NAME, its location and version.
 	"""
-	print('software:qgen\n------------')
+	print('software:cpti\n------------')
 	print('Version: ' + __version__)
 	print('Date:    ' + __date__)
 	#print('Path:    ' + ROOT_PATH)
