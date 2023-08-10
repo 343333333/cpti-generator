@@ -18,10 +18,10 @@ def main():
 
 	print("Description\n-------")
 	parser = argparse.ArgumentParser(description="""
-	Inspired by DPgen,Qgen is an iterative workflow used with VaspSOL and JDFTX 
+	Inspired by DPgen,cpti-gen is an iterative workflow used with Vasp 
 	to solve the number of electrons carried in the system of 
 	different materials under the condition of constant potential.
-	Enter "qgen-h" for more information.""")
+	Enter "cpti -h" for more information.""")
 
 	subparsers = parser.add_subparsers()
 
