@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from os import path
-from  qgen import NAME,SHORT_CMD
+from  cpti import NAME,SHORT_CMD
 import setuptools
 
 #readme_file = path.join(path.dirname(path.abspath(__file__)), 'README.md')
