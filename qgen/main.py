@@ -8,9 +8,9 @@ from qgen.generator.run import gene_run
 from qgen import info
 from qgen.collect.init_c import gene_c
 from qgen.collect.init_conf import init_conf
-__author__ = "Lv Xinmao"
+__author__ = "Xinmao Lv"
 __copyright__ = "Copyright 2022, @TCCL"
-__maintainer__ = "Lv Xinmao"
+__maintainer__ = "Xinmao Lv"
 __email__ = ""
 
 def main():
@@ -34,9 +34,10 @@ def main():
 	parser_run.set_defaults(func=gene_run)
 
 	# init_c
+	#under constrction
 	parser_initc = subparsers.add_parser(
 		"init_c",
-		help="calculate the capacitance value of this material-UNDER BUILDING")
+		help="calculate the capacitance value of this material")
 	parser_initc.add_argument('PARAM', type=str,
 						help="UNDER BUILDING")
 	parser_initc.set_defaults(func=gene_c)
@@ -50,25 +51,18 @@ def main():
 				   type=str, help='Images defining path from initial to final state.')
 	parser_initconf.add_argument('-n', '--nimage', type=int, default=7,
 				   help='Number of images in a band. Default: 6')
-	# 是否写入XDATCAR。
 	parser_initconf.add_argument('-o', '--output', action='store_true',
 				   help='Whether or not write XDATCAR.')
-	# 插点方法，可选线性插点或idpp，默认用idpp。
 	parser_initconf.add_argument('--method', type=str, choices=['linear', 'idpp'], default='idpp',
 				   help='Interpolate method to initial guess. Default: linear')
-	# idpp插点最大迭代步数，默认是100。
 	parser_initconf.add_argument('--nstep', type=int, default=100,
 				   help='Max number of iteration steps. Default: 100')
-	# 弹簧常数，默认按照ase.neb.NEB的0.1。
 	parser_initconf.add_argument('--spring', type=float, default=0.1,
 				   help='Fraction of spring force. Default: 0.1')
-	# idpp插点迭代的力收敛域值，默认按照ase.neb.NEB的0.1。
 	parser_initconf.add_argument('--fmax', type=float, default=0.1,
 				   help='Maximum force of converge thershould. Default: 0.1')
-	# idpp插点迭代所使用的优化算法，默认为ase.optimize.MDMin。
 	parser_initconf.add_argument('--optimizer', type=str, choices=['MDMin', 'BFGS', 'LBFGS', 'FIRE'],
 				   default='MDMin', help='Optimizer using in IDPP iteration. Default: MDMin')
-
 	parser_initconf.set_defaults(func=init_conf)
 
 	try:
