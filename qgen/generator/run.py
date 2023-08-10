@@ -143,8 +143,8 @@ def V_calculate(iter_num,para):
 	Capacitance=float(sub_para['Capacitance'])
 	PZC=float(sub_para['PZC'])
 	surface_atom=sub_para['surface_atom']
-	if sub_para['is_metal_surf']:
-		V_ave=0.5*get_average(V_cal(bader_path,Capacitance,PZC,surface_atom))
+	#if sub_para['is_metal_surf']:
+		#V_ave=0.5*get_average(V_cal(bader_path,Capacitance,PZC,surface_atom))
 	else:
 		V_ave=get_average(V_cal(bader_path,Capacitance,PZC,surface_atom))
 	if abs(V_ave-float(para['set_potential'])) <float(para['convergence']):
