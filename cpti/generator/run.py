@@ -23,7 +23,7 @@ def get_average(list):
 
 def temp1(file):
 	with open('%s'%file, 'r') as file:
-		# 逐行读取文件内容
+		# check the content of 
 		for line in file:
 			# 检查每一行是否包含参数变量
 			if re.match(r'^NELECT',line):

@@ -14,11 +14,23 @@ def sub_generator(sub_para,nodetag):
 		Onnode_sub(sub_para)
 	else:
 		if sub_para['queue_system']=='LSF' :
-			LSF_sub(sub_para)
+			if sub_para['external_script'] != None:
+				os.system(f"cp {sub_para['external_script']} mission.sub")
+				os.system('sbatch mission.sub')
+			else:
+				LSF_sub(sub_para)
 		elif sub_para['queue_system']=='PBS' :
-			PBS_sub(sub_para)
+			if sub_para['external_script'] != None:
+				os.system(f"cp {sub_para['external_script']} mission.sub")
+				os.system('sbatch mission.sub')
+			else:
+				PBS_sub(sub_para)
 		elif sub_para['queue_system']=='Slurm' :
-			Slurm_sub(sub_para)
+			if sub_para['external_script'] != None:
+				os.system(f"cp {sub_para['external_script']} mission.sub")
+				os.system('sbatch mission.sub')
+			else:
+				Slurm_sub(sub_para)
 #####design for iter_bader#####
 def head_gene(sub_para):
 	if sub_para['queue_system']=='LSF' :
