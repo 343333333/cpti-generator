@@ -138,9 +138,9 @@ def correction(V_true,V_cal,Capacitance,record_path,iternum):
 	bader_sur = np.array(bader_sur)
 	if iternum == 0 or iternum == 1:
 		b = 0
-                try:
-		   k = float(sub_para['init_k'])
-		   dlog.info("User defined init_k:%f"(k))
+		try:
+			k = float(sub_para['init_k'])
+			dlog.info("User defined init_k:%f"(k))
 		except:
 			k = bader_sur[0] / bias[0]
 			R2 = 1

@@ -23,9 +23,7 @@ def get_average(list):
 
 def temp1(file):
 	with open('%s'%file, 'r') as file:
-		# check the content of 
 		for line in file:
-			# 检查每一行是否包含参数变量
 			if re.match(r'^NELECT',line):
 				value=line.split('=')[1].strip()
 				return value
@@ -80,34 +78,77 @@ def init_bader(iter_num,para,nodetag):
 	dir_index=0
 	dir_format='%02d'
 	make_multi_path(step_path,dir_max)
-	for i in range(n_max):
-		if i%bader_each_file == 0 :
-			dir_index +=1 if i!=0 else 0
-			sub_file_path=os.path.join(step_path, dir_format %dir_index)
-			bader_path=os.path.join(sub_file_path,dir_format %i)
-			make_path(bader_path)
-			if not nodetag:
+	if sub_para['external_script'] != None:
+		for i in range(n_max):
+			if i%bader_each_file == 0 :
+				temp=""
+				dir_index +=1 if i!=0 else 0
+				sub_file_path=os.path.join(step_path, dir_format %dir_index)
+				bader_path=os.path.join(sub_file_path,dir_format %i)
+				make_path(bader_path)
+				if not nodetag:
+						temp+=body_gene(dir_format %i ,sub_para)
+						if (i+1)==n_max:
+							temp+=tail_gene(sub_para) 
+							with open(f"{sub_para["external_script"]}", 'r', encoding='utf-8') as f1:
+								content = f1.read()
+							updated_content = content
+							updated_content = updated_content.replace("$REPLACEMENT_POSITION$", temp)	
+							with open(f"{sub_file_path}/mission.sub", 'w', encoding='utf-8') as f2:
+								f2.write(updated_content)						
+				else:
+					with open(sub_file_path+'/mission.sub','a+') as fp :	
+						fp.write(body_gene(dir_format %i ,sub_para))
+						fp.write(tail_gene(sub_para)) if (i+1)==n_max else 0					
+			else :
+				sub_file_path=os.path.join(step_path, dir_format %dir_index)
+				bader_path=os.path.join(sub_file_path,dir_format %i)
+				make_path(bader_path)
+				# create_none_tail_
+				temp+=body_gene(dir_format %i,sub_para)
+				if (i+1)%bader_each_file==0 or (i+1)==n_max:
+					temp+=tail_gene(sub_para) 
+					with open(f"{sub_para["external_script"]}", 'r', encoding='utf-8') as f1:
+						content = f1.read()
+					updated_content = content
+					updated_content = updated_content.replace("$REPLACEMENT_POSITION$", temp)	
+					with open(f"{sub_file_path}/mission.sub", 'w', encoding='utf-8') as f2:
+						f2.write(updated_content)		
+			ret=new_POSCAR_gene(i,relax_step,interval,NBLOCK,atom) 
+			with open(bader_path+'/POSCAR','w') as fp :
+				fp.write(ret)
+			os.system('cp POTCAR KPOINTS %s'%bader_path)
+			os.system('cp ./INCAR-bader %s/INCAR '%bader_path)
+			keyword_replace('NELECT', temp1('INCAR'), os.path.join(bader_path,'INCAR'))
+	else:
+		for i in range(n_max):
+			if i%bader_each_file == 0 :
+				dir_index +=1 if i!=0 else 0
+				sub_file_path=os.path.join(step_path, dir_format %dir_index)
+				bader_path=os.path.join(sub_file_path,dir_format %i)
+				make_path(bader_path)
+				if not nodetag:
+					with open(sub_file_path+'/mission.sub','a+') as fp :
+						fp.write(head_gene(sub_para))
+						fp.write(body_gene(dir_format %i ,sub_para))
+						fp.write(tail_gene(sub_para)) if (i+1)==n_max else 0
+				else:
+					with open(sub_file_path+'/mission.sub','a+') as fp :	
+						fp.write(body_gene(dir_format %i ,sub_para))
+						fp.write(tail_gene(sub_para)) if (i+1)==n_max else 0					
+			else :
+				sub_file_path=os.path.join(step_path, dir_format %dir_index)
+				bader_path=os.path.join(sub_file_path,dir_format %i)
+				make_path(bader_path)
 				with open(sub_file_path+'/mission.sub','a+') as fp :
-					fp.write(head_gene(sub_para))
-					fp.write(body_gene(dir_format %i ,sub_para))
-					fp.write(tail_gene(sub_para)) if (i+1)==n_max else 0
-			else:
-				with open(sub_file_path+'/mission.sub','a+') as fp :	
-					fp.write(body_gene(dir_format %i ,sub_para))
-					fp.write(tail_gene(sub_para)) if (i+1)==n_max else 0					
-		else :
-			sub_file_path=os.path.join(step_path, dir_format %dir_index)
-			bader_path=os.path.join(sub_file_path,dir_format %i)
-			make_path(bader_path)
-			with open(sub_file_path+'/mission.sub','a+') as fp :
-				fp.write(body_gene(dir_format %i,sub_para))
-				fp.write(tail_gene(sub_para)) if (i+1)%bader_each_file==0 or (i+1)==n_max else 0
-		ret=new_POSCAR_gene(i,relax_step,interval,NBLOCK,atom) 
-		with open(bader_path+'/POSCAR','w') as fp :
-			fp.write(ret)
-		os.system('cp POTCAR KPOINTS %s'%bader_path)
-		os.system('cp ./INCAR-bader %s/INCAR '%bader_path)
-		keyword_replace('NELECT', temp1('INCAR'), os.path.join(bader_path,'INCAR'))
+					fp.write(body_gene(dir_format %i,sub_para))
+					fp.write(tail_gene(sub_para)) if (i+1)%bader_each_file==0 or (i+1)==n_max else 0
+			ret=new_POSCAR_gene(i,relax_step,interval,NBLOCK,atom) 
+			with open(bader_path+'/POSCAR','w') as fp :
+				fp.write(ret)
+			os.system('cp POTCAR KPOINTS %s'%bader_path)
+			os.system('cp ./INCAR-bader %s/INCAR '%bader_path)
+			keyword_replace('NELECT', temp1('INCAR'), os.path.join(bader_path,'INCAR'))
 	dlog.info('bader file generation complete' )
 	dlog.info('-----iter.%03d init_bader starts-----' %iter_num)
 	os.chdir(step_path)

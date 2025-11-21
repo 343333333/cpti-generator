@@ -21,11 +21,15 @@ def init_head(res_):
 	_default_item(res, 'job_name', 'cpti')
 	_default_item(res, 'qos', '')
 	_default_item(res, 'account', '')
+	_default_item(res, 'custom_executable', None)
 	return res
 def sub_head_gene(res):
 	ret=''
 	ret +="#!/bin/bash \n"
 	if res['gpu_switch']==0:
+		ret +='#SBATCH -ntasks=%d\n#SBATCH -ntasks-per-node=%d\n' %(res['core_per_task'],res['core_per_task'])
+	#TODO ADD THE HEADER FOR GPU SUBMISSION
+	else:
 		ret +='#SBATCH -ntasks=%d\n#SBATCH -ntasks-per-node=%d\n' %(res['core_per_task'],res['core_per_task'])
 	if res['set_mem'] > 0 :
 		ret += "#SBATCH --mem=%dG \n" % res['set_mem']
@@ -63,8 +67,11 @@ def bader_body_gene(res,file_name):
 	ret=''
 	ret += 'if [ ! -f ./%s/tag_finished ] ;then \n'%file_name
 	ret += 'cd %s \n'%file_name
-	ret += 'mpiexec.hydra -np %d %s > stdout 2>&1\n' %(
-		res['core_per_task'],res['vasp_path'])
+	if res["custom_executable"] != None:
+		ret+=f"{res["custom_executable"]} \n"
+	else:
+		ret += 'mpiexec.hydra -np %d %s > stdout 2>&1\n' %(
+			res['core_per_task'],res['vasp_path'])
 	ret += 'if test $? -ne 0; then touch tag_failure; fi \n'
 	ret += 'chgsum.pl AECCAR0 AECCAR2 >> stdout 2>&1\n'
 	ret += 'bader CHGCAR -ref CHGCAR_sum >> stdout 2>&1\n'

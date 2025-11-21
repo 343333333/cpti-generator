@@ -56,6 +56,7 @@ def tail_gene(sub_para):
 	elif sub_para['queue_system']=='Slurm' :
 		ret=Slurm_tail_gene()
 	return ret
+
 def do_sub(sub_para,dir_index):
 	if sub_para['queue_system']=='LSF' :
 		os.chdir('./%s'%dir_index)

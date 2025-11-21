@@ -32,7 +32,7 @@
 		"interval":40,
 		"interval-TI":400,
 		"bader_each_file":30,
-		"queue_system":"PBS",
+		"queue_system":"Slurm",
 		"queue_type": "short",
 		"numb_node" :1 ,
 		"core_per_task": 24,
@@ -45,6 +45,7 @@
 		"_module_list": ["intel","vaspsol544"],
 		"custom_flags": ["ulimit -s unlimited"],
 		"external_script":"/home/scripts/submission.sh",
+		"custom_executable":"mpirun ${ARGS} $vaspexe > stdout 2>&1",
 		"_external_script":null
 	},
 	"V_calculate":{
